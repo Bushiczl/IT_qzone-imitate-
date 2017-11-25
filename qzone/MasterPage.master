@@ -1,0 +1,20 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="MasterPage.master.cs" Inherits="MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<body>
+    <form id="form1" runat="server">
+        这里是<asp:label ID="lblHost" runat="server"></asp:label>的空间<br />
+        <asp:Button ID="btnLinkMyHost" runat="server" Text="返回我的空间" OnClick="btnLinkMyHost_Click" />
+        <asp:Button ID="btnLinkCentre" runat="server" Text="个人中心" OnClick="btnLinkCentre_Click" />
+        <asp:Button ID="btnLinkJournal" runat="server" Text="日志" OnClick ="btnLinkJournal_Click" />
+        <asp:Button ID="btnLinkPhoto" runat="server" Text="相册" OnClick="btnLinkPhoto_Click" />
+        <asp:Button ID="btnLinkMessage" runat="server" Text="留言板" OnClick="btnLinkMessage_Click" />
+        <asp:Button ID="btnLinkPersonal" runat="server" Text="个人档" OnClick="btnLinkPersonal_Click" />
+        <asp:Button ID="btnOut" runat="server" Text="退出" OnClick="btnOut_Click" />
+        <asp:ContentPlaceHolder id="cphContent" runat="server">
+        </asp:ContentPlaceHolder>
+    </form>
+</body>
+</html>
