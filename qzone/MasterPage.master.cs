@@ -35,7 +35,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
 
     protected void btnLinkPhoto_Click(object sender, EventArgs e)
     {
-
+        Response.Redirect("photo.aspx?" + Request.QueryString);
     }
 
     protected void btnLinkMessage_Click(object sender, EventArgs e)

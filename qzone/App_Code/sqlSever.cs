@@ -167,6 +167,17 @@ public class sqlSever
         return newDataId;
     }
 
+    public void deleteData(int dataId)
+    {
+        string style = getDataStyle(dataId);
+        styleIdAndTable siat = getStyleIdAndTable(style);
+        string sql;
+        sql = "delete from lines where firstId = " + dataId + " or secondId = " + dataId + ";";
+        sql = sql + " delete from " + siat.tableName + " where id in (select tableId from data where id = " + dataId + ");";
+        sql = sql + " delete from data where id = " + dataId;
+        sqlOther(sql);
+    }
+
     public void link(int firstId,int secondId, string style)
     {
         styleIdAndTable siat = getStyleIdAndTable(style);

@@ -10,28 +10,19 @@
 <body>
     <form id="form1" runat="server">
     <div>
-    <asp:Repeater ID="rpt" runat="server" OnItemCommand="rpt_ItemCommand1">
-        <HeaderTemplate>
-            <table>
-                <tr>
-                    <th>书名</th>
-                    <th>作者名</th>
-                    <th>类别</th>
-                    <th>出版社</th>
-                    <th>简介</th>
-                    <th>可借数量</th>
-                    <th>馆藏数量</th>
-                    <th>借阅</th>
-                </tr>
-        </HeaderTemplate>
-        <ItemTemplate>
-                <tr>
-                </tr>
-        </ItemTemplate>
-        <FooterTemplate>
-            </table>
-        </FooterTemplate>
-    </asp:Repeater><br />
+    <table>
+            <tr>
+                <td style="width: 400px">
+                    <input id="InputFile" style="width: 399px" type="file" runat="server" /></td>
+                <td style="width: 80px">
+                    <asp:Button ID="UploadButton" runat="server" Text="上传图片" OnClick="UploadButton_Click" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" >
+                    <asp:Label ID="Lb_Info" runat="server" ForeColor="Red"></asp:Label></td>                
+            </tr>
+        </table>    
+        <asp:Image ID="imgTest" runat="server" ImageUrl="~/images/636472054282759735.jpg" />
     </div>
     </form>
 </body>

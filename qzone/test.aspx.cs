@@ -15,13 +15,6 @@ public partial class test : System.Web.UI.Page
     object temp;
     protected void Page_Load(object sender, EventArgs e)
     {
-        DataTable dt = new DataTable();
-        string sql = "select 1,2,3";
-        sq.sqlSelect(sql, dt);
-        
-        Repeater abc = rpt;
-        abc.DataSource = dt;
-        abc.DataBind();
     }
 
     protected void btnTest_Click(object sender, EventArgs e)
@@ -32,5 +25,30 @@ public partial class test : System.Web.UI.Page
     protected void rpt_ItemCommand1(object source, RepeaterCommandEventArgs e)
     {
 
+    }
+
+    protected void UploadButton_Click(object sender, EventArgs e)
+    {
+        string uploadName = InputFile.Value;//获取待上传图片的完整路径，包括文件名
+        //string uploadName = InputFile.PostedFile.FileName;
+        string pictureName = "";//上传后的图片名，以当前时间为文件名，确保文件名没有重复
+        if (InputFile.Value != "")
+        {
+            int idx = uploadName.LastIndexOf(".");
+            string suffix = uploadName.Substring(idx);//获得上传的图片的后缀名
+            pictureName = DateTime.Now.Ticks.ToString() + suffix;
+        }
+        try
+        {
+            if (uploadName != "")
+            {
+                string path = Server.MapPath(es.PATH_IMAGES);
+                InputFile.PostedFile.SaveAs(path + pictureName);
+            }
+        }
+        catch (Exception ex)
+        {
+            Response.Write(ex);
+        }
     }
 }

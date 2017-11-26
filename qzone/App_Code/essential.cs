@@ -30,6 +30,7 @@ public class essential
     public string COOKIES_USER_PASSWORD = "userPassword";
 
     public string SESSION_USER_ID = "userId";
+    public string SESSION_RPT_PAGE = "page";
 
     public string STYLE_NULL = "null";
     public string STYLE_USERNAME = "username";
@@ -43,6 +44,9 @@ public class essential
     public string STYLE_PERSONAL_INTRODUCTION = "introduction";
     public string STYLE_JOURNAL_TITLE = "journalTitle";
     public string STYLE_JOURNAL_DATA = "journalData";
+    public string STYLE_IMAGESURL = "imagesUrl";
+
+    public string PATH_IMAGES = "~/images/";
 
     HttpCookie cookie;
 

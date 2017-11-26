@@ -13,7 +13,7 @@ public class repeaterOp
     Repeater rptNow=null;
     DataTable dt=null;
     PagedDataSource pds;
-    int pageCount, pageIndex;
+    public int pageCount, pageIndex;
     public repeaterOp()
     {
         
@@ -25,9 +25,13 @@ public class repeaterOp
         rptNow.DataBind();
     }
 
-    public int init(Repeater rptInput, DataTable dtInput, int pageSize = 5)
+    public void lockRpt(Repeater rptInput)
     {
         rptNow = rptInput;
+    }
+
+    public int init(DataTable dtInput, int pageSize = 5)
+    {
         if (rptNow == null) return 1;
         dt = dtInput;
         if (dt == null) return 2;
@@ -37,14 +41,18 @@ public class repeaterOp
         pds.DataSource = dt.DefaultView; //获取或设置数据源
         pds.CurrentPageIndex = 0;
         pageIndex = 1;
-        pageCount = pds.Count;
+        pageCount = pds.PageCount;
         bind();
         return 0;
     }
 
     public int nextPage()
     {
-        if (pageIndex == pds.PageCount) return 1;
+        if (pageIndex == pds.PageCount)
+        {
+            HttpContext.Current.Response.Write("<script>alert('已经是最后一页')</script>");
+            return 1;
+        }
         pageIndex = pageIndex + 1;
         pds.CurrentPageIndex = pageIndex - 1;
         bind();
@@ -52,7 +60,11 @@ public class repeaterOp
     }
     public int prePage()
     {
-        if (pageIndex == 1) return 2;
+        if (pageIndex == 1)
+        {
+            HttpContext.Current.Response.Write("<script>alert('已经是第一页')</script>");
+            return 2;
+        }
         pageIndex = pageIndex - 1;
         pds.CurrentPageIndex = pageIndex - 1;
         bind();
@@ -62,11 +74,32 @@ public class repeaterOp
     public int jumpPage(int index)
     {
         int realIndex=index-1;
-        if (realIndex < 0) return 1;
-        if (realIndex > pds.PageCount - 1) return 2;
+        if (realIndex < 0)
+        {
+            HttpContext.Current.Response.Write("<script>alert('页数非法')</script>");
+            return 1;
+        }
+        if (realIndex > pds.PageCount - 1)
+        {
+            HttpContext.Current.Response.Write("<script>alert('页数非法')</script>");
+            return 2;
+        }
         pageIndex = index;
         pds.CurrentPageIndex = pageIndex - 1;
         bind();
         return 0;
+    }
+
+    public int jumpFromSession(string sessionFlag)
+    {
+        if (HttpContext.Current.Session["page"] != null)
+        {
+            int page = int.Parse(HttpContext.Current.Session["page"].ToString());
+            if (page > pageCount) page = pageCount;
+            jumpPage(page);
+            HttpContext.Current.Session.Remove("page");
+            return 0;
+        }
+        return 1;
     }
 }
