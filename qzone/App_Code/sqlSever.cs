@@ -10,6 +10,8 @@ using System.Web;
 /// </summary>
 public class sqlSever
 {
+    static essential es = new essential();
+
     static string address = @"server=LAPTOP-BM1B2KDI;Integrated Security=SSPI;database=qzone;";
 
     public sqlSever()
@@ -125,6 +127,25 @@ public class sqlSever
         string sql= "select distinct secondId, " + siat.tableName + ".data from " + siat.tableName + ",data,lines,style where firstId = " + id + " and data.style = " + siat.styleId + " and secondId = data.id and data.tableId = " + siat.tableName + ".id";
         sqlSelect(sql, transport);
         return transport.Rows.Count;
+    }
+
+    public void getLines(DataTable transport, int firstId, int secondId, string style)
+    {
+        styleIdAndTable siat = getStyleIdAndTable(style);
+        string sql = "select distinct * from lines where '1'='1'";
+        if (firstId != -1)
+        {
+            sql = sql + " and firstId =" + firstId;
+        }
+        if (secondId != -1)
+        {
+            sql = sql + " and secondId = " + secondId;
+        }
+        if (style != es.STYLE_NULL)
+        {
+            sql = sql + " and style = " + siat.styleId;
+        }
+        sqlSelect(sql, transport);
     }
 
     public void changeDataContent(int id, object input)

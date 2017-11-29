@@ -45,6 +45,10 @@ public class essential
     public string STYLE_JOURNAL_TITLE = "journalTitle";
     public string STYLE_JOURNAL_DATA = "journalData";
     public string STYLE_IMAGESURL = "imagesUrl";
+    public string STYLE_DYNAMIC_CONTENT = "dynamicContent";
+    public string STYLE_DYNAMIC_EDIT_TIME = "dynamicEditTime";
+    public string STYLE_REPLY_CONTENT = "replyContent";
+    public string STYLE_LINES_FRIEND = "linesFriend";
 
     public string PATH_IMAGES = "~/images/";
 

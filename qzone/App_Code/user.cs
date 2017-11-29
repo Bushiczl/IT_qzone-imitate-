@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 
@@ -39,11 +40,14 @@ public class user
             return true;    
         }
         HttpCookie cookie = HttpContext.Current.Request.Cookies[es.COOKIES_USER];
-        HttpContext.Current.Session[es.SESSION_USER_ID] = cookie[es.COOKIES_USER_ID];
-        temp = HttpContext.Current.Session[es.SESSION_USER_ID];
-        if (isUserId(temp))
+        if (cookie != null)
         {
-            return true;
+            HttpContext.Current.Session[es.SESSION_USER_ID] = cookie[es.COOKIES_USER_ID];
+            temp = HttpContext.Current.Session[es.SESSION_USER_ID];
+            if (isUserId(temp))
+            {
+                return true;
+            }
         }
         HttpContext.Current.Response.Write("<script>alert('请先登录');location='login.aspx';</script>");
         return false;
@@ -83,6 +87,25 @@ public class user
     public int getUserLevel(int userId, int hostId)
     {
         if (userId == hostId) return 0;
-        return 5;
+        DataTable temp = new DataTable();
+        sq.getLines(temp, hostId, userId, es.STYLE_NULL);
+        if (temp.Rows.Count != 0)
+        {
+            return 1;
+        }
+        return -1;
+    }
+
+    public int addFriend(int userId, int friendId)
+    {
+        DataTable temp = new DataTable();
+        sq.getLines(temp, userId, friendId, es.STYLE_LINES_FRIEND);
+        if (temp.Rows.Count != 0)
+        {
+            return 1;
+        }
+        sq.link(userId, friendId, es.STYLE_LINES_FRIEND);
+        sq.link(friendId, userId, es.STYLE_LINES_FRIEND);
+        return 0;
     }
 }

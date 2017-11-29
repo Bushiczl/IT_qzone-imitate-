@@ -10,6 +10,8 @@ using System.Web.UI.WebControls;
 /// </summary>
 public class repeaterOp
 {
+    static essential es = new essential();
+
     Repeater rptNow=null;
     DataTable dt=null;
     PagedDataSource pds;
