@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="journal.aspx.cs" Inherits="journal" MasterPageFile="~/MasterPage.master" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="journal.aspx.cs" Inherits="journal" MasterPageFile="~/MasterPage.master" ValidateRequest="false" %>
 
 <asp:Content ContentPlaceHolderID="cphContent" runat="server" >
     <!DOCTYPE html>
@@ -7,6 +7,9 @@
     <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title></title>
+        <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
+        <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
+        <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
     </head>
     <body>
         <h1>日志</h1><br />
@@ -33,10 +36,25 @@
         <asp:Panel ID="pnlNewJournal" runat="server" Visible="false">
             <asp:TextBox ID="txtNewJournalTitle" runat="server" MaxLength="30"></asp:TextBox><br />
             <!--这里用来添加富文本编辑器-->
+            
+            <script id="editor" type="text/plain" name="content" style="width:1000px;height:100px;">
+                
+            </script>
 
             <asp:Button ID="btnNewSubmit" runat="server" Text="保存" OnClick="btnNewSubmit_Click" />
             <asp:Button ID="btnNewBack" runat="server" Text="返回" OnClick="btnNewBack_Click" />
         </asp:Panel>
     </body>
+        <script type="text/javascript">
+
+　　　　　　var ue = UE.getEditor('editor');
+
+　　　　</script>
+
+        <script runat="server">
+            
+        </script>
     </html>
 </asp:Content>
+
+    

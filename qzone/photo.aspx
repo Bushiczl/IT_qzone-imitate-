@@ -17,6 +17,7 @@
         </ItemTemplate>
         </asp:Repeater>
         <br />
+
         <asp:Button ID="btnPrePage" runat="server" Text="上一页" OnClick="btnPrePage_Click" />
         <asp:Button ID="btnNextPage" runat="server" Text="下一页" OnClick="btnNextPage_Click" />
         <asp:TextBox ID="txtNowPage" runat="server" ></asp:TextBox>/
@@ -26,7 +27,7 @@
         <table>
             <tr>
                 <td style="width: 400px">
-                    <input id="InputFile" style="width: 399px" type="file" runat="server" /></td>
+                    <asp:FileUpload  ID="InputFile" runat="server" /></td>
                 <td style="width: 80px">
                     <asp:Button ID="UploadButton" runat="server" Text="上传图片" OnClick="UploadButton_Click" /></td>
             </tr>

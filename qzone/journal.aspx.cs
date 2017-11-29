@@ -36,6 +36,10 @@ public partial class journal : System.Web.UI.Page
             lblShowAllPage.Text = re.pageCount.ToString();
             txtShowNowPage.Text = re.pageIndex.ToString();
         }
+        else
+        {
+            
+        }
     }
 
     protected void rptJournals_ItemCommand(object source, RepeaterCommandEventArgs e)
@@ -61,7 +65,14 @@ public partial class journal : System.Web.UI.Page
 
     protected void btnNewSubmit_Click(object sender, EventArgs e)
     {
-        string content = "";
+        string contentBackstage = Context.Request.Form["content"];
+
+        if (contentBackstage == null)
+        {
+            
+            Response.Write("<script>alert('emmm')</script>");
+            return;
+        }
         string title = txtNewJournalTitle.Text;
         int returnBack = es.checkInputBlack(title, "", 30);
         switch (returnBack)
@@ -75,7 +86,7 @@ public partial class journal : System.Web.UI.Page
             default:
                 break;
         }
-        jo.newJournal(userId, title, content);
+        jo.newJournal(userId, title, contentBackstage);
         Session[es.SESSION_RPT_PAGE] = re.pageIndex;
         Response.Redirect(Request.Url.ToString());
     }

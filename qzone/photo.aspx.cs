@@ -60,11 +60,11 @@ public partial class photo : System.Web.UI.Page
 
     protected void UploadButton_Click(object sender, EventArgs e)
     {
-        string uploadName = InputFile.Value;//获取待上传图片的完整路径，包括文件名
+        string uploadName = InputFile.FileName;//获取待上传图片的完整路径，包括文件名
         //string uploadName = InputFile.PostedFile.FileName;
         string pictureName = "";//上传后的图片名，以当前时间为文件名，确保文件名没有重复
         string suffix="";
-        if (InputFile.Value != "")
+        if (InputFile.FileName != "")
         {
             int idx = uploadName.LastIndexOf(".");
             suffix = uploadName.Substring(idx);//获得上传的图片的后缀名
