@@ -19,6 +19,15 @@ public class journalOp
         //
     }
 
+    private int getContentId(int journalId)
+    {
+        DataTable getContentId = new DataTable();
+        sq.getFirstIdLinkSecondId(journalId, es.STYLE_JOURNAL_DATA, getContentId);
+        int contentId = (int)getContentId.Rows[0][0];
+
+        return contentId;
+    }
+
     public void newJournal(int userId, string title, string content)
     {
         int titleId = sq.newData(title, es.STYLE_JOURNAL_TITLE);
@@ -36,5 +45,37 @@ public class journalOp
         {
             transport.Rows[i][1] = es.usefulXssDefendReplace(transport.Rows[i][1].ToString().Trim());
         }
+    }
+
+    public void getJournalAll(int journalId, DataTable transport)
+    {
+        transport.Clear();
+
+        DataRow tempRow = transport.NewRow();
+
+        tempRow["id"] = journalId;
+
+        tempRow["title"] = sq.getDataContent(journalId).ToString().Trim();
+
+        DataTable temp = new DataTable();
+        sq.getFirstIdLinkData(journalId, es.STYLE_JOURNAL_DATA, temp);
+        string content = temp.Rows[0][0].ToString().Trim();
+        tempRow["content"] = content;
+
+        transport.Rows.Add(tempRow);
+    }
+
+    public void deleteJournal(int journalId)
+    {
+        int contentId = (int)getContentId(journalId);
+        sq.deleteData(contentId);
+        sq.deleteData(journalId);
+    }
+
+    public void changeJournal(int journalId, string title, string content)
+    {
+        int contentId = (int)getContentId(journalId);
+        sq.changeDataContent(journalId, title);
+        sq.changeDataContent(contentId, content);
     }
 }

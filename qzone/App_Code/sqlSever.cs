@@ -148,6 +148,16 @@ public class sqlSever
         sqlSelect(sql, transport);
     }
 
+    public void deleteLines(DataTable deleteList)
+    {
+        for (int i = 0; i < deleteList.Rows.Count; i++)
+        {
+            int lineId = (int)deleteList.Rows[i][0];
+            string sql = "delete from lines where id = " + lineId;
+            sqlOther(sql);
+        }
+    }
+
     public void changeDataContent(int id, object input)
     {
         string dataStyle = getDataStyle(id);
