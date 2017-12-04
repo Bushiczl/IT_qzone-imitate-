@@ -11,44 +11,149 @@ public partial class test : System.Web.UI.Page
     static essential es = new essential();
     static user us = new user();
     static sqlSever sq = new sqlSever();
+    static repeaterOp re = new repeaterOp();
+    static dynamic dy = new dynamic();
+
     HttpCookie cookie;
+    int hostId;
+    DataTable list;
     object temp;
     protected void Page_Load(object sender, EventArgs e)
     {
-    }
-
-    protected void btnTest_Click(object sender, EventArgs e)
-    {
-        
-    }
-
-    protected void rpt_ItemCommand1(object source, RepeaterCommandEventArgs e)
-    {
-
-    }
-
-    protected void UploadButton_Click(object sender, EventArgs e)
-    {
-        string uploadName = InputFile.Value;//获取待上传图片的完整路径，包括文件名
-        //string uploadName = InputFile.PostedFile.FileName;
-        string pictureName = "";//上传后的图片名，以当前时间为文件名，确保文件名没有重复
-        if (InputFile.Value != "")
+        hostId = 1;
+        re.lockRpt(rptRelevantDynamic);
+        if (!Page.IsPostBack)
         {
-            int idx = uploadName.LastIndexOf(".");
-            string suffix = uploadName.Substring(idx);//获得上传的图片的后缀名
-            pictureName = DateTime.Now.Ticks.ToString() + suffix;
+            list = new DataTable();
+            dy.fillDynamic(hostId, list);
+            re.init(list);
+            re.jumpFromSession(es.SESSION_RPT_PAGE);
+            lblAllPage.Text = re.pageCount.ToString();
+            txtNowPage.Text = re.pageIndex.ToString();
         }
+    }
+
+    protected void rptRelevantDynamic_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        Panel pnl;
+        LinkButton btn;
+        TextBox txt;
+        int dynamicId, returnBack;
+        string replyContent;
+
+        e.Item.Visible=false;
+        
+        switch (e.CommandName)
+        {
+            case "delete":
+                dynamicId = int.Parse(e.CommandArgument.ToString());
+                dy.deleteDynamic(dynamicId);
+
+                Session[es.SESSION_RPT_PAGE] = re.pageIndex;
+                Response.Redirect(Request.Url.ToString());
+                break;
+            case "reply":
+                // 获取同一块下的pnl
+                pnl = (Panel)e.Item.FindControl("pnlReplyEdit");
+                // 获取引起事件的LinkButton
+                btn = (LinkButton)e.CommandSource;
+                btn.Visible = !(pnl.Visible = true);
+                break;
+            case "back":
+                pnl = (Panel)e.Item.FindControl("pnlReplyEdit");
+                // 因为引起事件的不是reply这个按钮 所以不能用CommandSource获取
+                btn = (LinkButton)e.Item.FindControl("btnReply");
+                btn.Visible = !(pnl.Visible = false);
+                break;
+            default:
+                break;
+        }
+    }
+
+    protected void rptRelevantDynamic_ItemDataBound(object sender, RepeaterItemEventArgs e)
+    {
+        if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
+        {
+            //找到外层Repeater的数据项
+            DataRowView rowv = (DataRowView)e.Item.DataItem;
+            //提取外层Repeater的数据项的ID
+            int dynamicId = Convert.ToInt32(rowv["dynamicId"]);
+            bool isMine = Convert.ToBoolean(rowv["isMine"]);
+            Repeater rept = (Repeater)e.Item.FindControl("RptReply");
+
+            DataTable replyList = new DataTable();
+            dy.fillReply(dynamicId, replyList);
+
+            //数据绑定
+            rept.DataSource = replyList;
+            rept.DataBind();
+        }
+    }
+
+    protected void rptReply_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+
+    }
+
+    protected void btnNewDynamic_Click(object sender, EventArgs e)
+    {
+        pnlShow.Visible = !(pnlEdit.Visible = true);
+    }
+
+    protected void btnSubmit_Click(object sender, EventArgs e)
+    {
+        string content = es.usefulXssDefendReplace(txtEditor.Text);
+        int returnBack = es.checkInputBlack(content, "", 500);
+        switch (returnBack)
+        {
+            case 0:
+                break;
+            case 1:
+                Response.Write("<script>alert('输入不能为空')</script>");
+                break;
+            case 2:
+                Response.Write("<script>alert('不能超过500个字符')</script>");
+                break;
+            default:
+                return;
+        }
+        dy.newDynamic(hostId, content);
+
+        Session[es.SESSION_RPT_PAGE] = re.pageIndex;
+        Response.Redirect(Request.Url.ToString());
+    }
+
+    protected void btnBack_Click(object sender, EventArgs e)
+    {
+        pnlShow.Visible = !(pnlEdit.Visible = false);
+    }
+
+    protected void btnPrePage_Click(object sender, EventArgs e)
+    {
+        re.prePage();
+        lblAllPage.Text = re.pageCount.ToString();
+        txtNowPage.Text = re.pageIndex.ToString();
+    }
+
+    protected void btnNextPage_Click(object sender, EventArgs e)
+    {
+        re.nextPage();
+        lblAllPage.Text = re.pageCount.ToString();
+        txtNowPage.Text = re.pageIndex.ToString();
+    }
+
+    protected void btnJump_Click(object sender, EventArgs e)
+    {
         try
         {
-            if (uploadName != "")
-            {
-                string path = Server.MapPath(es.PATH_IMAGES);
-                InputFile.PostedFile.SaveAs(path + pictureName);
-            }
+            int index = int.Parse(txtNowPage.Text);
+            re.jumpPage(index);
+            lblAllPage.Text = re.pageCount.ToString();
+            txtNowPage.Text = re.pageIndex.ToString();
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            Response.Write(ex);
+            Response.Write("<script>alert('emmmmmm为什么这个地方都要测')</script>");
         }
     }
 }

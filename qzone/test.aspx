@@ -9,21 +9,45 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <div>
-    <table>
-            <tr>
-                <td style="width: 400px">
-                    <input id="InputFile" style="width: 399px" type="file" runat="server" /></td>
-                <td style="width: 80px">
-                    <asp:Button ID="UploadButton" runat="server" Text="上传图片" OnClick="UploadButton_Click" /></td>
-            </tr>
-            <tr>
-                <td colspan="2" >
-                    <asp:Label ID="Lb_Info" runat="server" ForeColor="Red"></asp:Label></td>                
-            </tr>
-        </table>    
-        <asp:Image ID="imgTest" runat="server" ImageUrl="~/images/636472054282759735.jpg" />
-    </div>
+    <asp:Panel ID="pnlShow" runat="server" Visible="false">
+            <asp:Button ID="btnNewDynamic" runat="server" Text="写新动态" OnClick="btnNewDynamic_Click" />
+        </asp:Panel>
+        <asp:Panel ID="pnlEdit" runat="server" Visible="false">
+            <asp:TextBox ID="txtEditor" runat="server" TextMode="MultiLine"></asp:TextBox>
+            <asp:Button ID="btnSubmit" runat="server" Text="提交" OnClick="btnSubmit_Click" />
+            <asp:Button ID="btnBack" runat="server" Text="取消" OnClick="btnBack_Click" />
+        </asp:Panel> 
+
+        <asp:Repeater ID="rptRelevantDynamic" runat="server" OnItemCommand="rptRelevantDynamic_ItemCommand" OnItemDataBound="rptRelevantDynamic_ItemDataBound">
+            <ItemTemplate>
+                <%# Eval("dynamicUper") %>的动态
+
+                <asp:LinkButton ID="btnDelete" runat="server" Text="删除" CommandName="delete" CommandArgument='<%# Eval("dynamicId") %>' Visible= '<%# Eval("isMine") %>'></asp:LinkButton><br />
+                <%# Eval("dynamicContent") %><br /><br />
+                命名为reply的LinkButton
+                <asp:LinkButton ID="btnReply" runat="server" Text="回复" CommandName="reply"></asp:LinkButton><br />
+                要弹出的pnl
+                <asp:Panel ID="pnlReplyEdit" runat="server" Visible="false">
+                    <asp:TextBox ID="txtReplyEdit" runat="server"></asp:TextBox>
+                    <asp:LinkButton ID="btnSubmit" runat="server" Text="确认" CommandName="submit" CommandArgument='<%# Eval("dynamicId") %>'></asp:LinkButton>
+                    <asp:LinkButton ID="btnBack" runat="server" Text="返回" CommandName="back"></asp:LinkButton>
+                </asp:Panel>
+                <br />
+                评论：<br />
+                <asp:Repeater ID="rptReply" runat="server" OnItemCommand="rptReply_ItemCommand">
+                    <ItemTemplate>
+                        <%# Eval("reply") %><br />
+                    </ItemTemplate>
+                </asp:Repeater>
+                <br /><br /><br />
+            </ItemTemplate>
+        </asp:Repeater>
+
+        <asp:Button ID="btnPrePage" runat="server" Text="上一页" OnClick="btnPrePage_Click" />
+        <asp:Button ID="btnNextPage" runat="server" Text="下一页" OnClick="btnNextPage_Click" />
+        <asp:TextBox ID="txtNowPage" runat="server" ></asp:TextBox>/
+        <asp:Label ID="lblAllPage" runat="server"></asp:Label>
+        <asp:Button ID="btnJump" runat="server" Text="跳转" OnClick="btnJump_Click" />
     </form>
 </body>
 </html>

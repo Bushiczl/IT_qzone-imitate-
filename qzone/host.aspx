@@ -19,21 +19,25 @@
             <asp:Button ID="btnBack" runat="server" Text="取消" OnClick="btnBack_Click" />
         </asp:Panel> 
 
-        <asp:Repeater ID="rptRelevantDynamic" runat="server" OnItemCommand="rptRelevantDynamic_ItemCommand">
+        <asp:Repeater ID="rptRelevantDynamic" runat="server" OnItemCommand="rptRelevantDynamic_ItemCommand" OnItemDataBound="rptRelevantDynamic_ItemDataBound">
             <ItemTemplate>
-                <%--<%# Eval("dynamicUper") %>--%>的动态<asp:LinkButton ID="btnDelete" runat="server" Text="删除" CommandName="delete" CommandArgument='<%# Eval("dynamicId") %>' Visible="false"></asp:LinkButton><br />
+                <%# Eval("dynamicUper") %>的动态
+                <asp:LinkButton ID="btnDelete" runat="server" Text="删除" CommandName="delete" CommandArgument='<%# Eval("dynamicId") %>' Visible= '<%# Eval("isMine") %>'></asp:LinkButton><br />
                 <%# Eval("dynamicContent") %><br /><br />
-                <asp:LinkButton ID="btnReply" runat="server" Text="回复" CommandName="reply" CommandArgument='<%# Eval("dynamicId") %>'></asp:LinkButton>
-                <asp:TextBox ID="txtReplyEdit" runat="server"  Visible="false"></asp:TextBox>
+                <asp:LinkButton ID="btnReply" runat="server" Text="回复" CommandName="reply"></asp:LinkButton>
+                <asp:Panel ID="pnlReplyEdit" runat="server" Visible="false">
+                    <asp:TextBox ID="txtReplyEdit" runat="server"></asp:TextBox>
+                    <asp:LinkButton ID="btnSubmit" runat="server" Text="确认" CommandName="submit" CommandArgument='<%# Eval("dynamicId") %>'></asp:LinkButton>
+                    <asp:LinkButton ID="btnBack" runat="server" Text="返回" CommandName="back"></asp:LinkButton>
+                </asp:Panel>
+                <br />
                 评论：<br />
                 <asp:Repeater ID="rptReply" runat="server" OnItemCommand="rptReply_ItemCommand">
                     <ItemTemplate>
-                        <%# Eval("reply") %>
-                        <asp:LinkButton ID="btnReplyReply" runat="server" Text="回复此人" CommandName="reply" CommandArgument='<%# Eval("replyId") %>'></asp:LinkButton>
-                        <asp:TextBox ID="txtReplyReplyEdit" runat="server"  Visible="false"></asp:TextBox>
-                        <asp:LinkButton ID="btnReplyDelete" runat="server" Text="删除" CommandName="delete" CommandArgument='<%# Eval("replyId") %>'></asp:LinkButton>
+                        <%# Eval("reply") %><br />
                     </ItemTemplate>
                 </asp:Repeater>
+                <br /><br /><br />
             </ItemTemplate>
         </asp:Repeater>
 
@@ -47,4 +51,3 @@
     </html>
 </asp:Content>
 
- <%--'<%# Eval(&quot;isMine&quot;) %>'--%>

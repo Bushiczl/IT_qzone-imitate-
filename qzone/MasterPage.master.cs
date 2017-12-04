@@ -52,7 +52,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
 
     protected void btnLinkMessage_Click(object sender, EventArgs e)
     {
-
+        Response.Redirect("message.aspx?" + Request.QueryString);
     }
 
     protected void btnLinkPersonal_Click(object sender, EventArgs e)

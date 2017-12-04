@@ -10,8 +10,10 @@
         <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.config.js"></script>
         <script type="text/javascript" charset="utf-8" src="/ueditor/ueditor.all.min.js"> </script>
         <script type="text/javascript" charset="utf-8" src="/ueditor/lang/zh-cn/zh-cn.js"></script>
+        <link href="/ueditor/themes/default/ueditor.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <%--日志列表--%>
         <h1>日志</h1><br />
         <asp:Panel ID="pnlShow" runat="server">
             <asp:Button ID="btnShowNewJournal" runat="server" Text="新日志" OnClick="btnShowNewJournal_Click" /><br />
@@ -36,24 +38,54 @@
         <asp:Panel ID="pnlNewJournal" runat="server" Visible="false">
             <asp:TextBox ID="txtNewJournalTitle" runat="server" MaxLength="30"></asp:TextBox><br />
             <!--这里用来添加富文本编辑器-->
-            
-            <script id="editor" type="text/plain" name="content" style="width:1000px;height:100px;">
-                
-            </script>
+
+            <textarea id="txteditor" name="editor" runat="server">
+            </textarea>
+            <script type="text/javascript">
+                var editor = UE.ui.Editor();
+                editor.render("<%=txteditor.ClientID%>");
+　　　　    </script>
 
             <asp:Button ID="btnNewSubmit" runat="server" Text="保存" OnClick="btnNewSubmit_Click" />
             <asp:Button ID="btnNewBack" runat="server" Text="返回" OnClick="btnNewBack_Click" />
         </asp:Panel>
+
+        <%--显示单个日志--%>
+        <asp:Panel ID="pnlReadJournal" runat="server" Visible="false">
+
+            <asp:Panel ID="pnlReadShow" runat="server">
+                <h1><asp:Label ID="lblJournalTitle" runat="server"></asp:Label></h1>
+                <asp:Label ID="lblJournalContent" runat="server"></asp:Label><br />
+                <asp:Button ID="btnReadChangeJournal" runat="server" Text="修改" OnClick="btnReadChangeJournal_Click" />
+                <asp:Button ID="btnReadBack" runat="server" Text="返回" OnClick="btnReadBack_Click" />
+                <asp:Button ID="btnReply" runat="server" Text="回复" OnClick="btnReply_Click" /><br />
+
+                <asp:Repeater ID="rptReply" runat="server" OnItemCommand="rptReply_ItemCommand">
+                    <ItemTemplate>
+                        <%# Eval("reply") %>
+
+                    </ItemTemplate>
+                </asp:Repeater>
+
+            </asp:Panel>
+            <%--修改日志--%>
+            <asp:Panel ID="pnlReadChange" runat="server" Visible="false">
+                <asp:TextBox ID="txtChangeTitle" runat="server" MaxLength="30"></asp:TextBox><br />
+                
+                <textarea id="txtChangeEditor" name="editor2" runat="server">
+                </textarea>
+                <script type="text/javascript">
+                    var editor = UE.ui.Editor();
+                    editor.render("<%=txtChangeEditor.ClientID%>");
+　　　　        </script>
+
+                <asp:Button ID="btnChangeSave" runat="server" Text="保存" OnClick="btnChangeSave_Click" />
+                <asp:Button ID="btnChangeBack" runat="server" Text="返回" OnClick="btnChangeBack_Click" />
+            </asp:Panel>
+
+        </asp:Panel>
     </body>
-        <script type="text/javascript">
-
-　　　　　　var ue = UE.getEditor('editor');
-
-　　　　</script>
-
-        <script runat="server">
-            
-        </script>
+        
     </html>
 </asp:Content>
 
