@@ -68,6 +68,16 @@ public class journalOp
     public void deleteJournal(int journalId)
     {
         int contentId = (int)getContentId(journalId);
+
+        DataTable replyId = new DataTable();
+        sq.getFirstIdLinkSecondId(journalId, es.STYLE_JOURNAL_REPLY_CONTENT, replyId);
+
+        for (int i = 0; i < replyId.Rows.Count; i++)
+        {
+            int id = (int)replyId.Rows[i][0];
+            deleteReply(id);
+        }
+
         sq.deleteData(contentId);
         sq.deleteData(journalId);
     }
@@ -77,5 +87,50 @@ public class journalOp
         int contentId = (int)getContentId(journalId);
         sq.changeDataContent(journalId, title);
         sq.changeDataContent(contentId, content);
+    }
+
+    public void newJournalReply(int journalId, int userId, string content)
+    {
+        string username = sq.getDataContent(userId).ToString().Trim();
+        content = es.usefulXssDefendReplace(content);
+        content = username + ":" + content;
+
+        string time = DateTime.Now.ToString(es.ETC_DATETIME_CHANGE_METHOD);
+        int contentId = sq.newData(content, es.STYLE_JOURNAL_REPLY_CONTENT);
+        int timeId = sq.newData(time, es.STYLE_JOURNAL_REPLY_TIME);
+
+        sq.link(contentId, timeId, es.STYLE_NULL);
+        sq.link(journalId, contentId, es.STYLE_NULL);
+        sq.link(contentId, userId,es.STYLE_NULL);
+    }
+
+    public void getReply(int journalId,DataTable transport)
+    {
+        sq.getFirstIdLinkAll(journalId, es.STYLE_JOURNAL_REPLY_CONTENT, transport);
+        transport.Columns.Add("time",typeof(DateTime));
+        for (int i = 0; i < transport.Rows.Count; i++)
+        {
+            int replyId = (int)transport.Rows[i][0];
+            DataTable temp = new DataTable();
+            sq.getFirstIdLinkData(replyId, es.STYLE_JOURNAL_REPLY_TIME, temp);
+            transport.Rows[i][2] = temp.Rows[0][0];
+        }
+
+        transport.Columns["secondId"].ColumnName = "id";
+        transport.Columns["data"].ColumnName = "reply";
+
+        // 按发布时间排序
+        DataView dv = transport.DefaultView;
+        dv.Sort = "time DESC";//按照time倒序排序
+        dv.ToTable();
+    }
+
+    public void deleteReply(int replyId)
+    {
+        DataTable getTimeId = new DataTable();
+        sq.getFirstIdLinkSecondId(replyId, es.STYLE_JOURNAL_REPLY_TIME, getTimeId);
+        int timeId = (int)getTimeId.Rows[0][0];
+        sq.deleteData(timeId);
+        sq.deleteData(replyId);
     }
 }

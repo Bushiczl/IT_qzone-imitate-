@@ -11,6 +11,8 @@ public class user
 {
     static sqlSever sq = new sqlSever();
     static essential es = new essential();
+    static e_mail em = new e_mail();
+    static string myQQPwd = "onfcuaydnfzabehj";
 
     public user()
     {
@@ -19,17 +21,49 @@ public class user
         //
     }
 
-    public int addUser(string username,string password)
+    public int addUser(string username,string password, string email)
     {
-        int returnBack = sq.getDataId(username, es.STYLE_USERNAME);
+        int returnBack = sq.getDataId(username, es.STYLE_USER_NAME);
         if (returnBack != -1)
         {
             return 1;
         }
-        int usernameId = sq.newData(username, es.STYLE_USERNAME);
-        int passwordId = sq.newData(password, es.STYLE_PASSWORD);
+        returnBack = send("", email);
+        if (returnBack == 1)
+        {
+            return 2;
+        }
+        password = password.GetHashCode().ToString();
+        int usernameId = sq.newData(username, es.STYLE_USER_NAME);
+        int passwordId = sq.newData(password, es.STYLE_USER_PASSWORD);
+        int emailId = sq.newData(email, es.STYLE_USER_EMAIL);
+
         sq.link(usernameId, passwordId, es.STYLE_UNTOPWD);
+        sq.link(usernameId, emailId, es.STYLE_NULL);
         return 0;
+    }
+
+    public int send(string input, string email)
+    {
+        e_mail em = new e_mail();
+        em.mailFrom = "1045932460@qq.com";
+        em.mailPwd = myQQPwd;
+        em.mailSubject = "密码";
+        em.mailBody = input;
+        em.isbodyHtml = true;    //是否是HTML
+
+        em.host = "smtp.qq.com";//如果是QQ邮箱则：smtp:qq.com,依次类推
+        em.mailToArray = new string[] { email };//接收者邮件集合
+        em.mailCcArray = null;//抄送者邮件集合
+        if (em.Send())
+        {
+            return 0;//发送成功则提示返回当前页面；
+
+        }
+        else
+        {
+            return 1;
+        }
     }
 
     public bool checkLogin()
@@ -42,10 +76,16 @@ public class user
         HttpCookie cookie = HttpContext.Current.Request.Cookies[es.COOKIES_USER];
         if (cookie != null)
         {
-            HttpContext.Current.Session[es.SESSION_USER_ID] = cookie[es.COOKIES_USER_ID];
-            temp = HttpContext.Current.Session[es.SESSION_USER_ID];
-            if (isUserId(temp))
+            string rStr = cookie[es.COOKIES_USER_ID];
+            int strId = sq.getDataId(rStr, es.STYLE_USER_COOKIES);
+
+            if (strId != -1)
             {
+                DataTable getUserId = new DataTable();
+                sq.getLines(getUserId, -1, strId, es.STYLE_NULL);
+                int userId = (int)getUserId.Rows[0][1];
+
+                HttpContext.Current.Session[es.SESSION_USER_ID] = userId;
                 return true;
             }
         }
@@ -65,9 +105,9 @@ public class user
             return false;
         }
         int temp = int.Parse(input.ToString());
-        if (sq.getDataStyle(temp) != es.STYLE_USERNAME)
+        if (sq.getDataStyle(temp) != es.STYLE_USER_NAME)
         {
-            return false;;
+            return false;
         }
         return true;
     }
@@ -107,5 +147,21 @@ public class user
         sq.link(userId, friendId, es.STYLE_LINES_FRIEND);
         sq.link(friendId, userId, es.STYLE_LINES_FRIEND);
         return 0;
+    }
+
+    public void changeUserCookies(int userId, string rStr)
+    {
+        DataTable getCookiesId = new DataTable();
+        int cookiesId;
+        if (sq.getFirstIdLinkSecondId(userId, es.STYLE_USER_COOKIES, getCookiesId) == 0)
+        {
+            cookiesId = sq.newData(rStr, es.STYLE_USER_COOKIES);
+            sq.link(userId, cookiesId, es.STYLE_NULL);
+        }
+        else
+        {
+            cookiesId = (int)getCookiesId.Rows[0][0];
+            sq.changeDataContent(cookiesId, rStr);
+        }
     }
 }

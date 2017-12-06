@@ -43,8 +43,15 @@ public partial class journal : System.Web.UI.Page
             journalAll.Columns.Add("title", typeof(String));
             journalAll.Columns.Add("content", typeof(String));
         }
-        else
+
+        if (userLevel == 0)
         {
+            btnShowNewJournal.Visible = btnReadChangeJournal.Visible = true;
+            foreach (RepeaterItem ri in rptJournals.Items)
+            {
+                LinkButton btn = (LinkButton)ri.FindControl("btnDelete");
+                btn.Visible = true;
+            }
         }
     }
 
@@ -63,8 +70,17 @@ public partial class journal : System.Web.UI.Page
                 jo.getJournalAll(journalId, journalAll);
                 lblJournalTitle.Text = journalAll.Rows[0][1].ToString();
                 lblJournalContent.Text = journalAll.Rows[0][2].ToString();
-                pnlReadJournal.Visible = !(pnlShow.Visible = false);
+                getReplyAndBind(journalId);
+                if (userLevel == 0)
+                {
+                    foreach (RepeaterItem ri in rptReply.Items)
+                    {
+                        LinkButton btn = (LinkButton)ri.FindControl("btnReplyDelete");
+                        btn.Visible = true;
+                    }
+                }
 
+                pnlReadJournal.Visible = !(pnlShow.Visible = false);
                 break;
             default:
                 break;
@@ -195,15 +211,52 @@ public partial class journal : System.Web.UI.Page
         }
     }
 
-
+    private void getReplyAndBind(int journalId)
+    {
+        DataTable reply = new DataTable();
+        jo.getReply(journalId, reply);
+        rptReply.DataSource = reply;
+        rptReply.DataBind();
+    }
 
     protected void rptReply_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
-
+        int replyId = int.Parse(e.CommandArgument.ToString());
+        jo.deleteReply(replyId);
+        int journalId = (int)journalAll.Rows[0]["id"];
+        getReplyAndBind(journalId);
     }
 
     protected void btnReply_Click(object sender, EventArgs e)
     {
+        pnlReplyEdit.Visible = !(btnReply.Visible = false);
+    }
 
+    protected void btnReplySubmit_Click(object sender, EventArgs e)
+    {
+        int journalId = (int)journalAll.Rows[0]["id"];
+        string input = txtReplyEdit.Text;
+        int returnBack = es.checkInputBlack(input, "", 100);
+        switch (returnBack)
+        {
+            case 1:
+                Response.Write("<script>alert('回复不能为空')</script>");
+                return;
+            case 2:
+                Response.Write("<script>alert('回复不能超过100个字')</script>");
+                return;
+            default:
+                break;
+        }
+
+        jo.newJournalReply(journalId, userId, input);
+        getReplyAndBind(journalId);
+        txtReplyEdit.Text = "";
+        pnlReplyEdit.Visible = !(btnReply.Visible = true);
+    }
+
+    protected void btnReplyBack_Click(object sender, EventArgs e)
+    {
+        pnlReplyEdit.Visible = !(btnReply.Visible = true);
     }
 }

@@ -25,7 +25,7 @@ public partial class photo : System.Web.UI.Page
         userId = int.Parse(Session[es.SESSION_USER_ID].ToString());
         hostId = int.Parse(Request.QueryString["id"]);
         userLevel = us.getUserLevel(userId, hostId);
-
+        
         re.lockRpt(rptPhoto);
         if (!Page.IsPostBack)
         {
@@ -37,6 +37,16 @@ public partial class photo : System.Web.UI.Page
             re.jumpFromSession(es.SESSION_RPT_PAGE);
             lblAllPage.Text = re.pageCount.ToString();
             txtNowPage.Text = re.pageIndex.ToString();
+        }
+
+        if (userLevel == 0)
+        {
+            pnlHost.Visible = true;
+            foreach (RepeaterItem ri in rptPhoto.Items)
+            {
+                LinkButton btn = (LinkButton)ri.FindControl("btnDelete");
+                btn.Visible = true;
+            }
         }
     }
 
@@ -61,6 +71,12 @@ public partial class photo : System.Web.UI.Page
     protected void UploadButton_Click(object sender, EventArgs e)
     {
         string uploadName = InputFile.FileName;//获取待上传图片的完整路径，包括文件名
+        int length = InputFile.PostedFile.ContentLength;   //得到上传文件大小
+        if (length > 1048576) //1024*1024=1M,控制大小
+        {
+            Response.Write("<script>alert('文件不能超过1M !')</script>");
+            return;
+        }
         //string uploadName = InputFile.PostedFile.FileName;
         string pictureName = "";//上传后的图片名，以当前时间为文件名，确保文件名没有重复
         string suffix="";

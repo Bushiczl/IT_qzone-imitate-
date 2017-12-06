@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -10,8 +11,10 @@ public partial class MasterPage : System.Web.UI.MasterPage
     static essential es = new essential();
     static user us = new user();
     static sqlSever sq = new sqlSever();
+    static repeaterOp re = new repeaterOp();
 
     HttpCookie cookie;
+    DataTable list;
     object temp;
     int userId,hostId,userLevel;
 
@@ -23,10 +26,20 @@ public partial class MasterPage : System.Web.UI.MasterPage
         userLevel = us.getUserLevel(userId, hostId);
         lblHost.Text = sq.getDataContent(hostId).ToString();
 
+        if (userLevel == 0)
+        {
+            re.lockRpt(rptFriend);
+        }
+        else
+        {
+            btnMyFriend.Visible = false;
+            btnChangePwd.Visible = false;
+        }
+
         switch (userLevel)
         {
             case -1:
-                Response.Redirect("host.aspx?" + Request.QueryString);
+                Response.Write("<script>alert('未与主人成为好友，无法进入空间');location='host.aspx?id="+userId+"'</script>");
                 return;
             case 0:
                 btnLinkMyHost.Visible = false;
@@ -77,7 +90,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
     protected void btnAddFriend_Click(object sender, EventArgs e)
     {
         string username = txtFind.Text;
-        int result = sq.getDataId(username, es.STYLE_USERNAME);
+        int result = sq.getDataId(username, es.STYLE_USER_NAME);
         if (result == -1)
         {
             Response.Write("<script>alert('查无此人')</script>");
@@ -95,5 +108,31 @@ public partial class MasterPage : System.Web.UI.MasterPage
             default:
                 break;
         }
+    }
+
+    protected void btnMyfriend_Click(object sender, EventArgs e)
+    {
+        btnMyFriend.Visible = !(pnlFriendList.Visible = true);
+        list = new DataTable();
+        sq.getFirstIdLinkAll(hostId, es.STYLE_USER_NAME, list);
+        list.Columns["secondId"].ColumnName = "id";
+        list.Columns["data"].ColumnName = "name";
+        re.init(list, 100);
+    }
+
+    protected void rptFriend_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        int id = int.Parse(e.CommandArgument.ToString());
+        Response.Redirect("host.aspx?id=" + id);
+    }
+
+    protected void btnFriendBack_Click(object sender, EventArgs e)
+    {
+        btnMyFriend.Visible = !(pnlFriendList.Visible = false);
+    }
+
+    protected void btnChangePwd_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("changePwd.aspx?" + Request.QueryString);
     }
 }

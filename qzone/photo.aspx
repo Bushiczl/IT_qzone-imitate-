@@ -13,7 +13,7 @@
         <asp:Repeater ID="rptPhoto" runat="server" OnItemCommand="rptPhoto_ItemCommand">
         <ItemTemplate>
             <asp:Image runat="server" ImageUrl='<%# "~/images/"+Eval("url") %>' />
-            <asp:LinkButton runat="server" Text="删除" CommandName="btnDelete" CommandArgument='<%#  Eval("id")%>'></asp:LinkButton>
+            <asp:LinkButton ID="btnDelete" runat="server" Text="删除" CommandName="btnDelete" CommandArgument='<%#  Eval("id")%>' Visible="false"></asp:LinkButton>
         </ItemTemplate>
         </asp:Repeater>
         <br />
@@ -23,7 +23,7 @@
         <asp:TextBox ID="txtNowPage" runat="server" ></asp:TextBox>/
         <asp:Label ID="lblAllPage" runat="server"></asp:Label>
         <asp:Button ID="btnJump" runat="server" Text="跳转" OnClick="btnJump_Click" />
-
+        <asp:Panel ID="pnlHost" runat="server" Visible="false">
         <table>
             <tr>
                 <td style="width: 400px">
@@ -36,7 +36,7 @@
                     <asp:Label ID="Lb_Info" runat="server" ForeColor="Red"></asp:Label></td>                
             </tr>
         </table>    
-
+        </asp:Panel>
     </body>
     </html>
     

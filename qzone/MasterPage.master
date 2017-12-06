@@ -12,9 +12,20 @@
         <asp:Button ID="btnLinkPhoto" runat="server" Text="相册" OnClick="btnLinkPhoto_Click" />
         <asp:Button ID="btnLinkMessage" runat="server" Text="留言板" OnClick="btnLinkMessage_Click" />
         <asp:Button ID="btnLinkPersonal" runat="server" Text="个人档" OnClick="btnLinkPersonal_Click" />
+        <asp:Button ID="btnChangePwd" runat="server" Text="修改密码" OnClick="btnChangePwd_Click" />
         <asp:Button ID="btnOut" runat="server" Text="退出" OnClick="btnOut_Click" />
         <asp:TextBox ID="txtFind" runat="server"></asp:TextBox>
         <asp:Button ID="btnAddFriend" runat="server" Text="查找并添加好友" OnClick="btnAddFriend_Click" />
+        
+        <asp:Button ID="btnMyFriend" runat="server" Text="我的好友" OnClick="btnMyfriend_Click" />
+        <asp:Panel ID="pnlFriendList" runat="server" Visible="false">
+            <asp:Repeater ID="rptFriend" runat="server" OnItemCommand="rptFriend_ItemCommand">
+                <ItemTemplate>
+                    <asp:LinkButton ID="btnFriend" runat="server" CommandName="friend" CommandArgument='<%# Eval("id")%>' Text='<%# Eval("name") %>'></asp:LinkButton><br />
+                </ItemTemplate>
+            </asp:Repeater>
+            <asp:Button ID="btnFriendBack" runat="server" Text="返回" OnClick="btnFriendBack_Click" />
+        </asp:Panel>
         <br />
         <asp:ContentPlaceHolder id="cphContent" runat="server">
         </asp:ContentPlaceHolder>

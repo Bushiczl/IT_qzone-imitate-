@@ -68,6 +68,10 @@ public class sqlSever
 
     public int getDataId(object input, string style)
     {
+        if (input == null)
+        {
+            return -1;
+        }
         styleIdAndTable siat = getStyleIdAndTable(style);
         string sql = "select distinct data.id from data, "+siat.tableName+" where data.style = " + siat.styleId + " and " + siat.tableName + ".id = data.tableId and " + siat.tableName + ".data = @value0";
         DataTable temp = new DataTable();
@@ -100,7 +104,7 @@ public class sqlSever
         string sql = "select distinct style.styleName from style,data where data.id=" + id + " and data.style=style.id";
         DataTable temp = new DataTable();
         sqlSelect(sql, temp);
-        if (temp.Rows[0][0] == null) return "";
+        if (temp.Rows.Count == 0) return "";
         string styleName = temp.Rows[0][0].ToString().Trim();
         return styleName;
     }

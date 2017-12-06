@@ -16,14 +16,14 @@
         <%--日志列表--%>
         <h1>日志</h1><br />
         <asp:Panel ID="pnlShow" runat="server">
-            <asp:Button ID="btnShowNewJournal" runat="server" Text="新日志" OnClick="btnShowNewJournal_Click" /><br />
+            <asp:Button ID="btnShowNewJournal" runat="server" Text="新日志" OnClick="btnShowNewJournal_Click" Visible="false" /><br />
             <asp:Repeater ID="rptJournals" runat="server" OnItemCommand="rptJournals_ItemCommand">
                 <ItemTemplate>
                     <td>
                         <asp:LinkButton runat="server" CommandName="btnJournal" Text='<%# Eval("title") %>' CommandArgument='<%# Eval("id") %>'></asp:LinkButton>
                     </td>
                     <td>
-                        <asp:LinkButton runat="server" CommandName="btnDelete" Text="删除" CommandArgument='<%# Eval("id") %>'></asp:LinkButton>
+                        <asp:LinkButton ID="btnDelete" runat="server" CommandName="btnDelete" Text="删除" CommandArgument='<%# Eval("id") %>'></asp:LinkButton>
                     </td>
                     <br />
                 </ItemTemplate>
@@ -56,14 +56,20 @@
             <asp:Panel ID="pnlReadShow" runat="server">
                 <h1><asp:Label ID="lblJournalTitle" runat="server"></asp:Label></h1>
                 <asp:Label ID="lblJournalContent" runat="server"></asp:Label><br />
-                <asp:Button ID="btnReadChangeJournal" runat="server" Text="修改" OnClick="btnReadChangeJournal_Click" />
+                <asp:Button ID="btnReadChangeJournal" runat="server" Text="修改" OnClick="btnReadChangeJournal_Click" Visible="false" />
                 <asp:Button ID="btnReadBack" runat="server" Text="返回" OnClick="btnReadBack_Click" />
-                <asp:Button ID="btnReply" runat="server" Text="回复" OnClick="btnReply_Click" /><br />
 
+                <asp:Button ID="btnReply" runat="server" Text="回复" OnClick="btnReply_Click" /><br />
+                <asp:Panel ID="pnlReplyEdit" runat="server" Visible="false">
+                    <asp:TextBox ID="txtReplyEdit" runat="server"></asp:TextBox>
+                    <asp:Button ID="btnReplySubmit" runat="server" Text="发送" OnClick="btnReplySubmit_Click" />
+                    <asp:Button ID="btnReplyBack" runat="server" Text="返回" OnClick="btnReplyBack_Click" />
+                </asp:Panel><br />
+                评论：
                 <asp:Repeater ID="rptReply" runat="server" OnItemCommand="rptReply_ItemCommand">
                     <ItemTemplate>
                         <%# Eval("reply") %>
-
+                        <asp:LinkButton ID="btnReplyDelete" runat="server" CommandArgument='<%# Eval("id") %>' CommandName="delete" Text="删除" Visible="false"></asp:LinkButton><br />
                     </ItemTemplate>
                 </asp:Repeater>
 

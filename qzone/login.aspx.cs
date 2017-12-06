@@ -23,7 +23,18 @@ public partial class login : System.Web.UI.Page
             {
                 if (cookie[es.COOKIES_USER_ID] != null)
                 {
-                    userId = int.Parse(cookie[es.COOKIES_USER_ID].ToString());
+                    string rStr = cookie[es.COOKIES_USER_ID];
+                    int strId = sq.getDataId(rStr, es.STYLE_USER_COOKIES);
+                    if (strId != -1)
+                    {
+                        DataTable getUserId = new DataTable();
+                        sq.getLines(getUserId, -1, strId, es.STYLE_NULL);
+                        userId = (int)getUserId.Rows[0][1];
+                    }
+                    else
+                    {
+                        userId = -1;
+                    }
                 }
                 else
                 {
@@ -61,7 +72,7 @@ public partial class login : System.Web.UI.Page
     protected void btnLogin_Click(object sender, EventArgs e)
     {
         username = txtUsername.Text; password = txtPassword.Text;
-        userId = sq.getDataId(username,es.STYLE_USERNAME);
+        userId = sq.getDataId(username,es.STYLE_USER_NAME);
         string identify = txtIdentifying.Text;
         if(identify != Session["Identifying"].ToString())
         {
@@ -71,8 +82,9 @@ public partial class login : System.Web.UI.Page
         if (userId != -1)
         {
             DataTable temp = new DataTable();
-            sq.getFirstIdLinkData(userId, es.STYLE_PASSWORD, temp);
+            sq.getFirstIdLinkData(userId, es.STYLE_USER_PASSWORD, temp);
             string realPassword = temp.Rows[0][0].ToString().Trim();
+            password = password.GetHashCode().ToString();
             if (password == realPassword)
             {
                 cookie = new HttpCookie(es.COOKIES_USER);
@@ -84,7 +96,9 @@ public partial class login : System.Web.UI.Page
                 }
                 if (cbxAutoLogin.Checked)
                 {
-                    cookie.Values.Add(es.COOKIES_USER_ID,userId.ToString());
+                    string rStr = es.getRandomString(30);
+                    us.changeUserCookies(userId, rStr);
+                    cookie.Values.Add(es.COOKIES_USER_ID,rStr);
                 }
                 Session[es.SESSION_USER_ID] = userId;
                 Response.AppendCookie(cookie);
@@ -92,5 +106,10 @@ public partial class login : System.Web.UI.Page
             }
         }
         Response.Write("<script>alert('用户名或密码错误')</script>");
+    }
+
+    protected void btnPwdFindBack_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("pwdFindBack.aspx");
     }
 }

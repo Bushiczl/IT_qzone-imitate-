@@ -17,7 +17,7 @@ public partial class register : System.Web.UI.Page
 
     protected void btnSubmit_Click(object sender, EventArgs e)
     {
-        string username = txtUsername.Text, password = txtPassword.Text, passwordConfirm = txtPasswordConfirm.Text, identifying = txtIdentifying.Text;
+        string username = txtUsername.Text, password = txtPassword.Text, email=txtEmail.Text, passwordConfirm = txtPasswordConfirm.Text, identifying = txtIdentifying.Text;
         string realIdentifying = Session["identifying"].ToString();
         if (identifying != realIdentifying)
         {
@@ -62,11 +62,14 @@ public partial class register : System.Web.UI.Page
             default:
                 break;
         }
-        returnBack = us.addUser(username, password);
+        returnBack = us.addUser(username, password, email);
         switch (returnBack)
         {
             case 1:
                 Response.Write("<script>alert('该用户名已被注册')</script>");
+                return;
+            case 2:
+                Response.Write("<script>alert('邮箱错误，请检查邮箱')</script>");
                 return;
             default:
                 break;

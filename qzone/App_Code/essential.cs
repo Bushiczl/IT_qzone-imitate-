@@ -33,8 +33,10 @@ public class essential
     public string SESSION_RPT_PAGE = "page";
 
     public string STYLE_NULL = "null";
-    public string STYLE_USERNAME = "username";
-    public string STYLE_PASSWORD = "password";
+    public string STYLE_USER_NAME = "username";
+    public string STYLE_USER_PASSWORD = "password";
+    public string STYLE_USER_EMAIL = "email";
+    public string STYLE_USER_COOKIES = "userIdInCookies";
     public string STYLE_UNTOPWD = "UnToPwd";
     public string STYLE_PERSONAL_NICK_NAME = "nickName";
     public string STYLE_PERSONAL_SEX = "sex";
@@ -44,15 +46,21 @@ public class essential
     public string STYLE_PERSONAL_INTRODUCTION = "introduction";
     public string STYLE_JOURNAL_TITLE = "journalTitle";
     public string STYLE_JOURNAL_DATA = "journalData";
+    public string STYLE_JOURNAL_REPLY_CONTENT = "journalReplyContent";
+    public string STYLE_JOURNAL_REPLY_TIME = "journalReplyTime";
     public string STYLE_IMAGESURL = "imagesUrl";
     public string STYLE_DYNAMIC_CONTENT = "dynamicContent";
     public string STYLE_DYNAMIC_EDIT_TIME = "dynamicEditTime";
     public string STYLE_REPLY_CONTENT = "replyContent";
     public string STYLE_REPLY_TIME = "replyEditTime";
+    public string STYLE_MESSAGE_CONTENT = "messageContent";
+    public string STYLE_MESSAGE_TIME = "messageTime";
 
     public string STYLE_LINES_FRIEND = "linesFriend";
 
     public string PATH_IMAGES = "~/images/";
+
+    public string ETC_DATETIME_CHANGE_METHOD = "yyyy-MM-dd HH:mm:ss";
 
     HttpCookie cookie;
 
@@ -101,5 +109,20 @@ public class essential
         output = output.Replace("<", "&#60;");
         output = output.Replace(">", "&#62;");
         return output;
+    }
+
+    public string datetimeToString(DateTime input)
+    {
+        return input.ToString(ETC_DATETIME_CHANGE_METHOD);
+    }
+
+    public string getRandomString(int int_NumberLength)
+    {
+        Random random = new Random();
+        char[] chars = (CHARS_ABC_BIG + CHARS_ABC_SMALL + CHARS_NUM).ToArray();
+        string validateCode = string.Empty;
+        for (int i = 0; i < int_NumberLength; i++)
+            validateCode += chars[random.Next(0, chars.Length)].ToString();
+        return validateCode;
     }
 }

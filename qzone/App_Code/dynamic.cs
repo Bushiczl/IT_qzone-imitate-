@@ -25,14 +25,30 @@ public class dynamic
         // 筛选空间主人的好友
         DataTable dynamicOwner = new DataTable();
         sq.getLines(dynamicOwner, hostId, -1, es.STYLE_LINES_FRIEND);
-        // 空间主人自己也算是自己的好友
-        DataRow tempHostAdd = dynamicOwner.NewRow();  
-        tempHostAdd[2] = hostId;
-        dynamicOwner.Rows.Add(tempHostAdd);
 
         // 拿到访问者的用户名
         int userId = int.Parse(HttpContext.Current.Session[es.SESSION_USER_ID].ToString());
         string userName= sq.getDataContent(userId).ToString();
+
+        // 删除与访问者无关的信息
+        for (int i = dynamicOwner.Rows.Count - 1; i >= 0 ; i--)
+        {
+            int tempId = (int)dynamicOwner.Rows[i][2];
+            if (tempId != userId)
+            {
+                DataTable temp = new DataTable();
+                sq.getLines(temp, tempId, userId, es.STYLE_LINES_FRIEND);
+                if (temp.Rows.Count == 0)
+                {
+                    dynamicOwner.Rows.RemoveAt(i);
+                }
+            }
+        }
+
+        // 空间主人自己也算是自己的好友
+        DataRow tempHostAdd = dynamicOwner.NewRow();
+        tempHostAdd[2] = hostId;
+        dynamicOwner.Rows.Add(tempHostAdd);
 
         // 初始化transport表
         transport.Columns.Add("secondId", typeof(Int32));  // 动态id，方便sql填充表取用此列名，下面有改
