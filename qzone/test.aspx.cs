@@ -21,11 +21,4 @@ public partial class test : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
     }
-    protected void Unnamed_Click(object sender, EventArgs e)
-    {
-        int userId = 1;
-        string email = "1045932460@qq.com";
-        int id = sq.newData(email, es.STYLE_USER_EMAIL);
-        sq.link(userId, id, es.STYLE_NULL);
-    }
 }

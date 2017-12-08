@@ -30,9 +30,11 @@ public partial class photo : System.Web.UI.Page
         if (!Page.IsPostBack)
         {
             list = new DataTable();
+            // 个性化填充绑定源
             sq.getFirstIdLinkAll(hostId, es.STYLE_IMAGESURL, list);
             list.Columns["secondId"].ColumnName = "id";
             list.Columns["data"].ColumnName = "url";
+
             re.init(list);
             re.jumpFromSession(es.SESSION_RPT_PAGE);
             lblAllPage.Text = re.pageCount.ToString();
@@ -68,23 +70,26 @@ public partial class photo : System.Web.UI.Page
         Response.Redirect(Request.Url.ToString());
     }
 
+    // 上传文件部分
     protected void UploadButton_Click(object sender, EventArgs e)
     {
-        string uploadName = InputFile.FileName;//获取待上传图片的完整路径，包括文件名
+        string uploadName = InputFile.PostedFile.FileName;//获取待上传图片的完整路径，包括文件名
+
+        // 上传前检测文件大小，但不知道为什么这部分完全没有任何卵用
         int length = InputFile.PostedFile.ContentLength;   //得到上传文件大小
         if (length > 1048576) //1024*1024=1M,控制大小
         {
             Response.Write("<script>alert('文件不能超过1M !')</script>");
             return;
         }
-        //string uploadName = InputFile.PostedFile.FileName;
-        string pictureName = "";//上传后的图片名，以当前时间为文件名，确保文件名没有重复
+        
+        string pictureName = "";
         string suffix="";
         if (InputFile.FileName != "")
         {
             int idx = uploadName.LastIndexOf(".");
             suffix = uploadName.Substring(idx);//获得上传的图片的后缀名
-            pictureName = DateTime.Now.Ticks.ToString() + suffix;
+            pictureName = DateTime.Now.Ticks.ToString() + suffix;//上传后的图片名，以当前时间为文件名，确保文件名没有重复
         }
         switch (suffix)
         {
@@ -115,6 +120,7 @@ public partial class photo : System.Web.UI.Page
         }
     }
 
+    // 杂按钮的函数块
     protected void btnPrePage_Click(object sender, EventArgs e)
     {
         re.prePage();
@@ -140,7 +146,8 @@ public partial class photo : System.Web.UI.Page
         }
         catch (Exception)
         {
-            Response.Write("<script>alert('emmmmmm为什么这个地方都要测')</script>");
+            Response.Write("<script>alert('页数输入不合法')</script>");
         }
     }
+    // 结束
 }

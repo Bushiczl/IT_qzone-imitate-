@@ -94,12 +94,12 @@ public class repeaterOp
 
     public int jumpFromSession(string sessionFlag)
     {
-        if (HttpContext.Current.Session["page"] != null)
+        if (HttpContext.Current.Session[sessionFlag] != null)
         {
-            int page = int.Parse(HttpContext.Current.Session["page"].ToString());
+            int page = int.Parse(HttpContext.Current.Session[sessionFlag].ToString());
             if (page > pageCount) page = pageCount;
             jumpPage(page);
-            HttpContext.Current.Session.Remove("page");
+            HttpContext.Current.Session.Remove(sessionFlag);
             return 0;
         }
         return 1;

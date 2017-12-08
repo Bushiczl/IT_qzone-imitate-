@@ -29,12 +29,12 @@ public partial class personal : System.Web.UI.Page
         if (userLevel != 0) btnChange.Visible = false;
 
         
-            nickName = pe.getNickName(hostId);
-            sex = pe.getSex(hostId);
-            birthday = pe.getBirthday(hostId);
-            bloodType = pe.getBloodType(hostId);
-            job = pe.getJob(hostId);
-            introduction = pe.getIntroduction(hostId);
+        nickName = pe.getNickName(hostId);
+        sex = pe.getSex(hostId);
+        birthday = pe.getBirthday(hostId);
+        bloodType = pe.getBloodType(hostId);
+        job = pe.getJob(hostId);
+        introduction = pe.getIntroduction(hostId);
         
 
         if (nickName != null)

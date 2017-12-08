@@ -24,8 +24,21 @@ public partial class MasterPage : System.Web.UI.MasterPage
         userId = int.Parse(Session[es.SESSION_USER_ID].ToString());
         hostId = int.Parse(Request.QueryString["id"]);
         userLevel = us.getUserLevel(userId, hostId);
+        // 空间主人名字
         lblHost.Text = sq.getDataContent(hostId).ToString();
 
+        // 如果不是好友强制跳走
+        switch (userLevel)
+        {
+            case -1:
+                Response.Write("<script>alert('未与主人成为好友，无法进入空间');location='host.aspx?id=" + userId + "'</script>");
+                return;
+            case 0:
+                btnLinkMyHost.Visible = false;
+                break;
+        }
+
+        // 修改密码、显示好友按钮 作为访客时是不需要的
         if (userLevel == 0)
         {
             re.lockRpt(rptFriend);
@@ -34,16 +47,6 @@ public partial class MasterPage : System.Web.UI.MasterPage
         {
             btnMyFriend.Visible = false;
             btnChangePwd.Visible = false;
-        }
-
-        switch (userLevel)
-        {
-            case -1:
-                Response.Write("<script>alert('未与主人成为好友，无法进入空间');location='host.aspx?id="+userId+"'</script>");
-                return;
-            case 0:
-                btnLinkMyHost.Visible = false;
-                break;
         }
 
     }
@@ -80,8 +83,9 @@ public partial class MasterPage : System.Web.UI.MasterPage
 
     protected void btnOut_Click(object sender, EventArgs e)
     {
+        // 只去掉自动登录cookies和session
         cookie = Request.Cookies[es.COOKIES_USER];
-        cookie.Expires=DateTime.Now.AddYears(-1);
+        cookie.Values.Remove(es.COOKIES_USER_ID);
         Response.AppendCookie(cookie);
         Session.Remove(es.SESSION_USER_ID);
         Response.Redirect("login.aspx");
@@ -117,6 +121,7 @@ public partial class MasterPage : System.Web.UI.MasterPage
         sq.getFirstIdLinkAll(hostId, es.STYLE_USER_NAME, list);
         list.Columns["secondId"].ColumnName = "id";
         list.Columns["data"].ColumnName = "name";
+        // 若显示好友还要分页则按钮太多，故直接设置成最多显示（只能加）100个好友，将其他页面的repeaterOp配套按钮copy过来也能分页。
         re.init(list, 100);
     }
 

@@ -52,9 +52,7 @@ public class journalOp
         transport.Clear();
 
         DataRow tempRow = transport.NewRow();
-
         tempRow["id"] = journalId;
-
         tempRow["title"] = sq.getDataContent(journalId).ToString().Trim();
 
         DataTable temp = new DataTable();

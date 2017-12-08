@@ -18,12 +18,15 @@
         </asp:Repeater>
         <br />
 
+        <%--repeater分页时底下的杂按钮--%>
         <asp:Button ID="btnPrePage" runat="server" Text="上一页" OnClick="btnPrePage_Click" />
         <asp:Button ID="btnNextPage" runat="server" Text="下一页" OnClick="btnNextPage_Click" />
         <asp:TextBox ID="txtNowPage" runat="server" ></asp:TextBox>/
         <asp:Label ID="lblAllPage" runat="server"></asp:Label>
         <asp:Button ID="btnJump" runat="server" Text="跳转" OnClick="btnJump_Click" />
         <asp:Panel ID="pnlHost" runat="server" Visible="false">
+
+        <!--上传图片部分-->
         <table>
             <tr>
                 <td style="width: 400px">

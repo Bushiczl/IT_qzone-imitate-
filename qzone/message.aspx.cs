@@ -125,7 +125,7 @@ public partial class message : System.Web.UI.Page
         }
         catch (Exception)
         {
-            Response.Write("<script>alert('emmmmmm为什么这个地方都要测')</script>");
+            Response.Write("<script>alert('页数输入不合法')</script>");
         }
     }
 }

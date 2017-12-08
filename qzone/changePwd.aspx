@@ -9,9 +9,9 @@
         <title></title>
     </head>
     <body>
-        原密码：<asp:TextBox ID="txtPwdOld" runat="server" MaxLength="40"></asp:TextBox><br />
-        新密码：<asp:TextBox ID="txtPwdNew" runat="server" MaxLength="40"></asp:TextBox><br />
-        确认新密码：<asp:TextBox ID="txtPwdConfirm" runat="server" MaxLength="40"></asp:TextBox><br />
+        原密码：<asp:TextBox ID="txtPwdOld" runat="server" MaxLength="40" TextMode="Password"></asp:TextBox><br />
+        新密码：<asp:TextBox ID="txtPwdNew" runat="server" MaxLength="40" TextMode="Password"></asp:TextBox><br />
+        确认新密码：<asp:TextBox ID="txtPwdConfirm" runat="server" MaxLength="40" TextMode="Password"></asp:TextBox><br />
         <asp:Button ID="btnSubmit" runat="server" Text="提交" OnClick="btnSubmit_Click" />
     </body>
     </html>

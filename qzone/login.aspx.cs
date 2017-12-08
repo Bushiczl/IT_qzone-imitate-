@@ -19,10 +19,12 @@ public partial class login : System.Web.UI.Page
     {
         cookie = Request.Cookies[es.COOKIES_USER];
         if (!Page.IsPostBack) {
+            // 检查自动登录 查cookies
             if (cookie != null)
             {
                 if (cookie[es.COOKIES_USER_ID] != null)
                 {
+                    // 获得分配给自动登录用户的随机字符串 并查找相应的用户
                     string rStr = cookie[es.COOKIES_USER_ID];
                     int strId = sq.getDataId(rStr, es.STYLE_USER_COOKIES);
                     if (strId != -1)
@@ -40,11 +42,13 @@ public partial class login : System.Web.UI.Page
                 {
                     userId = -1;
                 }
+                // 找到用户则直接跳转
                 if (userId != -1)
                 {
                     Session[es.SESSION_USER_ID] = userId;
                     Response.Redirect("host.aspx?id=" + userId);
                 }
+                // 记住密码
                 if (cookie[es.COOKIES_USER_USERNAME] != null)
                 {
                     username = cookie[es.COOKIES_USER_USERNAME].ToString();
@@ -71,35 +75,48 @@ public partial class login : System.Web.UI.Page
 
     protected void btnLogin_Click(object sender, EventArgs e)
     {
+        // 各种检测登录
         username = txtUsername.Text; password = txtPassword.Text;
         userId = sq.getDataId(username,es.STYLE_USER_NAME);
+        // 先判验证码
         string identify = txtIdentifying.Text;
         if(identify != Session["Identifying"].ToString())
         {
             Response.Write("<script>alert('验证码错误')</script>");
             return;
         }
+
+        // 若用户名被注册过
         if (userId != -1)
         {
+            // 获取该用户名的密码，数据库中储存的是密码的哈希值，原密码不可见
             DataTable temp = new DataTable();
             sq.getFirstIdLinkData(userId, es.STYLE_USER_PASSWORD, temp);
             string realPassword = temp.Rows[0][0].ToString().Trim();
-            password = password.GetHashCode().ToString();
+            string tempPwd = password;  // 记住密码按钮用到的语句
+            password = password.GetHashCode().ToString();  // 输入的密码取哈希
+
+            // 登录成功
             if (password == realPassword)
             {
+                // 默认会记住用户名
                 cookie = new HttpCookie(es.COOKIES_USER);
                 cookie.Expires = System.DateTime.Now.AddDays(7);
                 cookie.Values.Add(es.COOKIES_USER_USERNAME, username);
+
                 if (cbxRememberPassword.Checked)
                 {
-                    cookie.Values.Add(es.COOKIES_USER_PASSWORD, password);
+                    cookie.Values.Add(es.COOKIES_USER_PASSWORD, tempPwd);
                 }
+
                 if (cbxAutoLogin.Checked)
                 {
                     string rStr = es.getRandomString(30);
                     us.changeUserCookies(userId, rStr);
                     cookie.Values.Add(es.COOKIES_USER_ID,rStr);
                 }
+
+                // 跳转
                 Session[es.SESSION_USER_ID] = userId;
                 Response.AppendCookie(cookie);
                 Response.Redirect("host.aspx?id=" + userId);

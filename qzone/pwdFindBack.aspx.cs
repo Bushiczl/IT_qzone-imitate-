@@ -19,6 +19,7 @@ public partial class pwdFindBack : System.Web.UI.Page
 
     protected void btnFind_Click(object sender, EventArgs e)
     {
+        // 防止有人通过这个窗口猜用户名，所以点击按钮直接提示已发送
         Response.Write("<script>alert('随机新密码已发送到邮箱')</script>");
         string name = txtUsername.Text;
         int userId = sq.getDataId(name, es.STYLE_USER_NAME);

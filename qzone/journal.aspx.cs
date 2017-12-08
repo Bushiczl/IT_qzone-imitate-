@@ -44,6 +44,7 @@ public partial class journal : System.Web.UI.Page
             journalAll.Columns.Add("content", typeof(String));
         }
 
+        // 添上所有删除按钮
         if (userLevel == 0)
         {
             btnShowNewJournal.Visible = btnReadChangeJournal.Visible = true;
@@ -207,7 +208,7 @@ public partial class journal : System.Web.UI.Page
         }
         catch (Exception)
         {
-            Response.Write("<script>alert('emmmmmm为什么这个地方都要测')</script>");
+            Response.Write("<script>alert('页数输入不合法')</script>");
         }
     }
 

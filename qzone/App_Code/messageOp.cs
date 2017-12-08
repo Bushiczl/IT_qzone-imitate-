@@ -39,15 +39,18 @@ public class messageOp
         transport.Columns.Add("time", typeof(DateTime));
         transport.Columns.Add("from", typeof(String));
 
+        // 获取所有日志id及标题
         DataTable getJournalAll = new DataTable();
         sq.getFirstIdLinkAll(hostId, es.STYLE_JOURNAL_TITLE, getJournalAll);
-
+        // 填充日志下的评论
         for (int i = 0; i < getJournalAll.Rows.Count; i++)
         {
             int journalId = (int)getJournalAll.Rows[i][0];
             string journalTitle = getJournalAll.Rows[i][1].ToString().Trim();
             int temp = transport.Rows.Count;
             sq.getFirstIdLinkAll(journalId, es.STYLE_JOURNAL_REPLY_CONTENT, transport);
+
+            // 获取编辑时间，填写来源
             for (int j = temp; j < transport.Rows.Count; j++)
             {
                 int replyId = (int)transport.Rows[j][0];
@@ -58,21 +61,26 @@ public class messageOp
             }
         }
 
+        // 填充留言板下留言
         int temp2 = transport.Rows.Count;
         sq.getFirstIdLinkAll(hostId, es.STYLE_MESSAGE_CONTENT, transport);
         for (int i = temp2; i < transport.Rows.Count; i++)
         {
+            // 获取编辑时间，填写来源
             int messageId = (int)transport.Rows[i][0];
             DataTable getTime = new DataTable();
             sq.getFirstIdLinkData(messageId, es.STYLE_MESSAGE_TIME, getTime);
             transport.Rows[i][2] = getTime.Rows[0][0];
-
             transport.Rows[i][3] = "留言板留言";
         }
 
+        // 如想添加其他来源可在下面编辑
+        // transport.Rows.Add……
+
+        // 改名
         transport.Columns["secondId"].ColumnName = "id";
         transport.Columns["data"].ColumnName = "content";
-
+        // 排序
         DataView dv = transport.DefaultView;
         dv.Sort = "time DESC";//按照time倒序排序
         dv.ToTable();

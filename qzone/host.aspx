@@ -10,6 +10,7 @@
         <title></title>
     </head>
     <body>
+        <%--编辑新动态--%>
         <asp:Panel ID="pnlShow" runat="server" Visible="false">
             <asp:Button ID="btnNewDynamic" runat="server" Text="写新动态" OnClick="btnNewDynamic_Click" />
         </asp:Panel>
@@ -18,12 +19,13 @@
             <asp:Button ID="btnSubmit" runat="server" Text="提交" OnClick="btnSubmit_Click" />
             <asp:Button ID="btnBack" runat="server" Text="取消" OnClick="btnBack_Click" />
         </asp:Panel> 
-
+         <%--动态列表--%>
         <asp:Repeater ID="rptRelevantDynamic" runat="server" OnItemCommand="rptRelevantDynamic_ItemCommand" OnItemDataBound="rptRelevantDynamic_ItemDataBound">
             <ItemTemplate>
                 <%# Eval("dynamicUper") %>的动态
                 <asp:LinkButton ID="btnDelete" runat="server" Text="删除" CommandName="delete" CommandArgument='<%# Eval("dynamicId") %>' Visible= '<%# Eval("isMine") %>'></asp:LinkButton><br />
                 <%# Eval("dynamicContent") %><br /><br />
+                <%--编辑回复--%>
                 <asp:LinkButton ID="btnReply" runat="server" Text="回复" CommandName="reply"></asp:LinkButton>
                 <asp:Panel ID="pnlReplyEdit" runat="server" Visible="false">
                     <asp:TextBox ID="txtReplyEdit" runat="server"></asp:TextBox>
@@ -31,6 +33,7 @@
                     <asp:LinkButton ID="btnBack" runat="server" Text="返回" CommandName="back"></asp:LinkButton>
                 </asp:Panel>
                 <br />
+                <%--显示回复--%>
                 评论：<br />
                 <asp:Repeater ID="rptReply" runat="server" OnItemCommand="rptReply_ItemCommand">
                     <ItemTemplate>

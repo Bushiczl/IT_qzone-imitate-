@@ -23,7 +23,7 @@
                         <asp:LinkButton runat="server" CommandName="btnJournal" Text='<%# Eval("title") %>' CommandArgument='<%# Eval("id") %>'></asp:LinkButton>
                     </td>
                     <td>
-                        <asp:LinkButton ID="btnDelete" runat="server" CommandName="btnDelete" Text="删除" CommandArgument='<%# Eval("id") %>'></asp:LinkButton>
+                        <asp:LinkButton ID="btnDelete" runat="server" CommandName="btnDelete" Text="删除" CommandArgument='<%# Eval("id") %>' Visible="false"></asp:LinkButton>
                     </td>
                     <br />
                 </ItemTemplate>
@@ -37,8 +37,8 @@
         </asp:Panel>
         <asp:Panel ID="pnlNewJournal" runat="server" Visible="false">
             <asp:TextBox ID="txtNewJournalTitle" runat="server" MaxLength="30"></asp:TextBox><br />
-            <!--这里用来添加富文本编辑器-->
-
+            
+            <!--富文本编辑器-->
             <textarea id="txteditor" name="editor" runat="server">
             </textarea>
             <script type="text/javascript">
@@ -52,7 +52,7 @@
 
         <%--显示单个日志--%>
         <asp:Panel ID="pnlReadJournal" runat="server" Visible="false">
-
+            <!--显示日志部分-->
             <asp:Panel ID="pnlReadShow" runat="server">
                 <h1><asp:Label ID="lblJournalTitle" runat="server"></asp:Label></h1>
                 <asp:Label ID="lblJournalContent" runat="server"></asp:Label><br />
@@ -74,10 +74,10 @@
                 </asp:Repeater>
 
             </asp:Panel>
-            <%--修改日志--%>
+            <!--修改日志部分-->
             <asp:Panel ID="pnlReadChange" runat="server" Visible="false">
                 <asp:TextBox ID="txtChangeTitle" runat="server" MaxLength="30"></asp:TextBox><br />
-                
+                <!--富文本编辑器-->
                 <textarea id="txtChangeEditor" name="editor2" runat="server">
                 </textarea>
                 <script type="text/javascript">

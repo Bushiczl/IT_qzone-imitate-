@@ -9,7 +9,6 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:Button ID="dfdsf1" runat="server" OnClick="Unnamed_Click" />
     </form>
 </body>
 </html>
