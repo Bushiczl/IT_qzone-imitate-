@@ -29,6 +29,19 @@
         });
     });
 
+    $(".getabc").click(function () {
+        //send get ajax
+        var url = $(".getUrl").val();
+        $.ajax({
+            url: url,
+            type: 'GET', //GET
+            async: true,    //或false,是否异步
+            success: function (data) {
+                console.log("postResponse:" + data);
+                $('.callback-getImg').val(data);
+            }
+        });
+    });
 
     //处理参数返回JSON,作为post参数
     function splitParams(params){

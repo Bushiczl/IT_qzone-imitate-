@@ -15,7 +15,7 @@ public class HeHeHe : IHttpHandler {
         Bitmap basemap = new Bitmap(200, 60);
         Graphics graph = Graphics.FromImage(basemap);
         Font font = new Font(FontFamily.GenericSerif, 48, FontStyle.Bold, GraphicsUnit.Pixel);
-        Pen linePen = new Pen(new SolidBrush(Color.Black), 2);
+        Pen linePen = new Pen(new SolidBrush(Color.White), 2);
         Random r = new Random();
 
         for (int i = 0; i < 6; i++)

