@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>测试接口</title>
+    <meta charset="utf-8" />
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+    <style>
+        input[type=text]{
+            width:250px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1><strong>GET请求</strong></h1>
+        <p>
+            请求地址:<input type="text" class="getUrl"  value="Handler.ashx" />
+            <input type="button" value="send get" class="get" /><br />
+
+            请求图片（不可用）:<input type="text" class="getLaLaLa" value="HeHeHe.ashx" />
+            <input type="button" value="send get2" class="getabc" /><br />
+            服务器响应内容:<input type="text" class="callback-get" style="width:1000px" readonly="readonly"/><br />
+            （不可用）<input type="image" class="callback-getImg" style="width:1000px" />
+        </p>
+    </div>
+    <div>
+        <h1><strong>POST请求</strong></h1>
+        <p>
+            请求地址:<input type="text" class="postUrl" value="postit.ashx"  /><br />
+            请求内容:<input type="text" class="postParmas" value="username=1&pwd=2" />
+            <input type="button" value="send post" class="post" /><br />
+            服务器响应内容:<input type="text" class="callback-post" style="width:1000px"  readonly="readonly" />
+
+        </p>
+    </div>
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
