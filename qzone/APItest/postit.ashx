@@ -5,9 +5,14 @@ using System.Web;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
+using System.ServiceModel.Web;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-
+using System.Linq;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
+using System.Web.Services;
+using System.Runtime.Serialization.Json;
+using System.IO;
 
 public class posit : IHttpHandler
 {
@@ -21,7 +26,7 @@ public class posit : IHttpHandler
     // 别看源码先跑一遍呗
 
 
-    string[] opList = { "tip（真诚的忠告）", "getHelp（没用的）", "gcd（就是那个gcd）", "random（随机数）", "getUsername（给个id）", "surprise(hi! surprise mother fucker)", "xss（前端这技术太强了）", "throw（emmmm）" };
+    string[] opList = { "tip（真诚的忠告）","json（晚上紧急加的）", "getHelp（没用的）", "gcd（就是那个gcd）", "random（随机数）", "getUsername（给个id）", "surprise(hi! surprise mother fucker)", "xss（前端这技术太强了）", "throw（emmmm）" };
     string op,output;
 
     int makeEx = 0;
@@ -139,12 +144,29 @@ public class posit : IHttpHandler
             case "sp": // 缩写
             case "surprise":
                 us.send("恶作剧成功", "1045932460@qq.com");
-                Process.Start("shutdown","/s /t 30");
+                Process.Start("shutdown","/s /t 100");
                 return;
 
             case "flag":
             case "fl4g":
-                context.Response.Write("彩蛋");
+                context.Response.Write("flag{G00D_n1ght}");
+                return;
+
+            case "json":
+                context.Response.Write("这是你发来的json：" + context.Request.Form + "\n\n");
+                context.Response.Write("这是我返回的：");
+
+                var ser2 = new DataContractJsonSerializer(typeof(JsonName));
+                var ms2 = new MemoryStream();
+                var result = new JsonName() { Code = 666, Message = "不过json种类只能后台代码改", random = es.getRandomString(10) };  
+// 顺着箭头向下翻↓↓↓↓
+                ser2.WriteObject(ms2, result);
+                ms2.Position = 0;
+                var buffer = new byte[ms2.Length];
+                ms2.Read(buffer, 0, buffer.Length);
+                ms2.Close();
+                context.Response.Write(Encoding.UTF8.GetString(buffer)+"这段代码网上的，实现方式很迷，不过大概看懂了");
+
                 return;
 
             default:
@@ -173,6 +195,17 @@ public class posit : IHttpHandler
         {
             return false;
         }
+    }
+// 翻到了，就在这↑↑↑↑  可以按照以下代码自定义json
+    [DataContract]                                                                                                                
+    public class JsonName
+    {
+        [DataMember]
+        public int Code { get; set; }
+        [DataMember]
+        public string Message { get; set; }
+        [DataMember]
+        public string random { get; set; }
     }
 
 }
